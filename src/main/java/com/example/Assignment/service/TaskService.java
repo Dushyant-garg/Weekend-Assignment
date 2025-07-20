@@ -7,6 +7,7 @@ import com.example.Assignment.enums.TaskStatus;
 import com.example.Assignment.repository.ProjectRepository;
 import com.example.Assignment.repository.TaskRepository;
 import com.example.Assignment.repository.UsersRepository;
+import com.example.Assignment.util.GetUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,22 +29,18 @@ public class TaskService {
     private UsersRepository usersRepository;
 
     public Task createTask(String name, String description, LocalDate deadline, Long projectId, List<Long> assignedUserIds) {
+
         Project project = projectRepository.findById(projectId).orElseThrow(()-> new RuntimeException("Project not found"));
-//        System.out.println(realUser);
-//        if (project.isEmpty()) {
-//            throw new RuntimeException("Project not found with ID: " + projectId);
-//        }
-
-//        Project project = project.get();
+        Long userId = GetUserDetails.getCurrentUserId();
         Users manager = project.getManager(); // Auto-fetch project manager
-//        if (!project.getManager().getId().equals(realUser.getId())) {
-//            throw new RuntimeException("Only the project manager can assign tasks.");
-//        }
+        if (!project.getManager().getId().equals(userId)) {
+            throw new RuntimeException("Only the project manager can assign tasks.");
+        }
 
-        // Fetch assigned users (should be from project's team)
+        // Fetching assigned users
         List<Users> assignedUsers = usersRepository.findAllById(assignedUserIds);
 
-        // Optional check: ensure assigned users are part of the project team
+        // ensuring assigned users are part of the project team
         for (Users user : assignedUsers) {
             if (!project.getTeam().contains(user)) {
                 throw new RuntimeException("User " + user.getUsername() + " is not part of the project team");
@@ -55,7 +52,7 @@ public class TaskService {
         task.setDescription(description);
         task.setDeadline(deadline);
         task.setProject(project);
-        task.setManager(manager); // Set manager from project
+        task.setManager(manager);
         task.setAssignedTo(assignedUsers);
 
         return taskRepository.save(task);
@@ -74,7 +71,7 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        // Enforce dependency check when setting to IN_PROGRESS
+        // Ensuring dependency check when setting to IN_PROGRESS
         if (status == TaskStatus.IN_PROGRESS || status == TaskStatus.COMPLETED) {
             for (Task dependency : task.getDependencies()) {
                 if (dependency.getStatus() != TaskStatus.COMPLETED) {
@@ -93,7 +90,6 @@ public class TaskService {
 
         Set<Task> dependencies = new HashSet<>(taskRepository.findAllById(dependencyIds));
 
-        // Optional: Prevent circular dependencies
         if (dependencies.contains(task)) {
             throw new RuntimeException("Task cannot depend on itself.");
         }
