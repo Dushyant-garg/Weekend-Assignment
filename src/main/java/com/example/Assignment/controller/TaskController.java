@@ -6,6 +6,7 @@ import com.example.Assignment.enums.TaskStatus;
 import com.example.Assignment.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class TaskController {
         public List<Long> assignedUserIds;
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping
     public Task createTask(@RequestBody CreateTaskRequest request) {
         return taskService.createTask(

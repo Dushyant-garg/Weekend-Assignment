@@ -1,5 +1,6 @@
 package com.example.Assignment.entity;
 
+import com.example.Assignment.enums.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -12,6 +13,9 @@ public class Users {
     private Long id;
     private String username;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 //    @JsonBackReference
     @OneToMany(mappedBy = "manager")
@@ -45,21 +49,13 @@ public class Users {
         this.password = password;
     }
 
-//    public List<Project> getManagedProjects() {
-//        return managedProjects;
-//    }
-//
-//    public void setManagedProjects(List<Project> managedProjects) {
-//        this.managedProjects = managedProjects;
-//    }
-//
-//    public List<Project> getTeamProjects() {
-//        return teamProjects;
-//    }
-//
-//    public void setTeamProjects(List<Project> teamProjects) {
-//        this.teamProjects = teamProjects;
-//    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     @Override
     public String toString() {
@@ -67,6 +63,7 @@ public class Users {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

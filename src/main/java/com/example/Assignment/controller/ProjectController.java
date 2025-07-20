@@ -4,6 +4,7 @@ import com.example.Assignment.entity.Project;
 import com.example.Assignment.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class ProjectController {
         public List<Long> teamUserIds;
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping
     public Project createProject(@RequestBody CreateProjectRequest request) {
         return projectService.createProject(
