@@ -1,7 +1,7 @@
 package com.example.Assignment.service;
 
 import com.example.Assignment.entity.Users;
-import com.example.Assignment.repository.UserRepo;
+import com.example.Assignment.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +19,7 @@ public class UserService {
     AuthenticationManager authManager;
 
     @Autowired
-    private UserRepo repo;
+    private UsersRepository repo;
 
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);

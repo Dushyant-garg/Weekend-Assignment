@@ -1,20 +1,31 @@
 package com.example.Assignment.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Users {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String username;
     private String password;
 
-    public int getId() {
+//    @JsonBackReference
+    @OneToMany(mappedBy = "manager")
+    private List<Project> managedProjects;
+
+//    @JsonBackReference
+    @ManyToMany(mappedBy = "team")
+    private List<Project> teamProjects;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -33,6 +44,22 @@ public class Users {
     public void setPassword(String password) {
         this.password = password;
     }
+
+//    public List<Project> getManagedProjects() {
+//        return managedProjects;
+//    }
+//
+//    public void setManagedProjects(List<Project> managedProjects) {
+//        this.managedProjects = managedProjects;
+//    }
+//
+//    public List<Project> getTeamProjects() {
+//        return teamProjects;
+//    }
+//
+//    public void setTeamProjects(List<Project> teamProjects) {
+//        this.teamProjects = teamProjects;
+//    }
 
     @Override
     public String toString() {

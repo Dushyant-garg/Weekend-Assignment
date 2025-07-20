@@ -2,7 +2,7 @@ package com.example.Assignment.service;
 
 import com.example.Assignment.entity.UserPrincipal;
 import com.example.Assignment.entity.Users;
-import com.example.Assignment.repository.UserRepo;
+import com.example.Assignment.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepo userRepo;
+    private UsersRepository userRepo;
 
 
     @Override
